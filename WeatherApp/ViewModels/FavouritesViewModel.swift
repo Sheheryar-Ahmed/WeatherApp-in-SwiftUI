@@ -26,6 +26,11 @@ class FavouritesViewModel: ObservableObject {
     }
     
     func addFavourite(city: String) {
+        if favouriteCities.contains(where: { $0.name == city }) {
+            print("City '\(city)' already exists in favourites.")
+            return
+        }
+        
         let newCity = City(context: context)
         newCity.name = city
         

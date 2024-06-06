@@ -61,6 +61,7 @@ class WeatherViewModel: ObservableObject {
                 }
             }, receiveValue: { weather in
                 self.weather = weather
+                self.city = weather.name
             })
     }
     
