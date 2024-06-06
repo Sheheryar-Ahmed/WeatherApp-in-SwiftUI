@@ -13,7 +13,34 @@ struct FavouritesView: View {
     var body: some View {
         List {
             ForEach(viewModel.favouriteCities) { city in
-                Text(city.name ?? "Unknown City")
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text(city.name ?? "Unknown City")
+                            .font(.headline)
+                        if let weather = viewModel.weatherData[city.name ?? ""] {
+                            Text("Temp: \(weather.main.temp, specifier: "%.1f") °C")
+                            Text("Humidity: \(weather.main.humidity)%")
+                            Text("Condition: \(weather.weather.first?.description ?? "Unknown")")
+                        } else {
+                            Text("Loading weather data...")
+                        }
+                    }
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        viewModel.removeFavourite(city: city)
+                    }) {
+                        Image(systemName: "trash")
+                            .foregroundColor(.red)
+                    }
+                }
+                .padding(.vertical)
+                .onAppear {
+                    if let cityName = city.name {
+                        viewModel.fetchWeather(for: cityName)
+                    }
+                }
             }
             .onDelete { indexSet in
                 indexSet.forEach { index in

@@ -6,6 +6,22 @@
 //
 
 import Foundation
+import CoreData
+
+extension City {
+    @NSManaged public var weatherData: Data?
+    
+    var weather: WeatherResponse? {
+        get {
+            guard let weatherData = weatherData else { return nil }
+            return try? JSONDecoder().decode(WeatherResponse.self, from: weatherData)
+        }
+        set {
+            weatherData = try? JSONEncoder().encode(newValue)
+        }
+    }
+}
+
 
 struct WeatherResponse: Codable {
     let main: Main
@@ -20,5 +36,4 @@ struct Main: Codable {
 
 struct Weather: Codable {
     let description: String
-    let icon: String
 }

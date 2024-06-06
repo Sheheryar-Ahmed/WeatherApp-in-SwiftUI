@@ -19,7 +19,8 @@ class WeatherViewModel: ObservableObject {
     private let weatherService = WeatherService()
     private let locationManager = LocationManager()
     private var cancellables = Set<AnyCancellable>()
-    
+    private let favouritesViewModel = FavouritesViewModel()
+
     init() {
         locationManager.$location
             .compactMap { $0 }
@@ -32,6 +33,7 @@ class WeatherViewModel: ObservableObject {
     
     func fetchWeather(for city: String) {
         cancellable = weatherService.fetchWeather(for: city)
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure(let error):
@@ -49,6 +51,7 @@ class WeatherViewModel: ObservableObject {
         let longitude = location.coordinate.longitude
         
         cancellable = weatherService.fetchWeather(forLatitude: latitude, longitude: longitude)
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure(let error):
@@ -59,5 +62,11 @@ class WeatherViewModel: ObservableObject {
             }, receiveValue: { weather in
                 self.weather = weather
             })
+    }
+    
+    func addFavouriteCity() {
+        if !city.isEmpty {
+            favouritesViewModel.addFavourite(city: city)
+        }
     }
 }

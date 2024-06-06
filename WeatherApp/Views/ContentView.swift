@@ -8,53 +8,22 @@
 import SwiftUI
 import CoreData
 
+import SwiftUI
+
 struct ContentView: View {
-    @StateObject private var viewModel = WeatherViewModel()
-    
     var body: some View {
-        NavigationView {
-            VStack {
-                TextField("Enter city", text: $viewModel.city)
-                    .padding()
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                
-                Button("Get Weather") {
-                    viewModel.fetchWeather(for: viewModel.city)
+        TabView {
+            HomeView()
+                .tabItem {
+                    Image(systemName: "house.fill")
+                    Text("Home")
                 }
-                .padding()
-                
-                if let weather = viewModel.weather {
-                    VStack {
-                        Text("Weather in \(weather.name)")
-                            .font(.largeTitle)
-                        Text("\(weather.main.temp, specifier: "%.1f") °C")
-                            .font(.title)
-                        Text(weather.weather.first?.description ?? "")
-                    }
-                    .padding()
-                } else if let errorMessage = viewModel.errorMessage {
-                    Text(errorMessage)
-                        .foregroundColor(.red)
+
+            FavouritesView()
+                .tabItem {
+                    Image(systemName: "star.fill")
+                    Text("Favourites")
                 }
-                
-                Spacer()
-                
-                NavigationLink(destination: FavouritesView()) {
-                    Text("Go to Favourites")
-                }
-                .padding()
-            }
-            .navigationTitle("Weather App")
-        }
-        .onAppear {
-            if let location = viewModel.currentLocation {
-                viewModel.fetchWeather(for: location)
-            }
         }
     }
-}
-
-
-#Preview {
-    ContentView()
 }
