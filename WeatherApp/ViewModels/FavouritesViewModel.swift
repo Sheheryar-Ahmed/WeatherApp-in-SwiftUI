@@ -12,6 +12,7 @@ import Foundation
 class FavouritesViewModel: ObservableObject {
     @Published var favouriteCities: [City] = []
     @Published var weatherData: [String: WeatherResponse] = [:]
+    
     private let context = PersistenceController.shared.container.viewContext
     private let weatherService = WeatherService()
     private var cancellables = Set<AnyCancellable>()
@@ -60,7 +61,6 @@ class FavouritesViewModel: ObservableObject {
                 }
             }, receiveValue: { weather in
                 self.weatherData[cityName] = weather
-                self.objectWillChange.send()
             })
             .store(in: &cancellables)
     }
