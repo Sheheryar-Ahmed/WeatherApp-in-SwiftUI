@@ -35,6 +35,7 @@ struct FavouritesView: View {
                             .foregroundColor(.red)
                     }
                 }
+                .buttonStyle(PlainButtonStyle())
                 .padding(.vertical)
                 .onAppear {
                     if let cityName = city.name {
@@ -54,4 +55,8 @@ struct FavouritesView: View {
             viewModel.fetchFavourites()
         }
     }
+}
+
+#Preview {
+    FavouritesView()
 }

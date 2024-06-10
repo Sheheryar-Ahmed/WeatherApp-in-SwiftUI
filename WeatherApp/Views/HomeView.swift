@@ -11,12 +11,20 @@ struct HomeView: View {
     @StateObject private var viewModel = WeatherViewModel()
 
     var body: some View {
+        // SearchBar with error Views
         VStack {
             TextField("Enter city", text: $viewModel.city)
-                .padding()
-                .textFieldStyle(RoundedBorderTextFieldStyle())
+                
+                .textFieldStyle(.roundedBorder)
                 .padding(.horizontal)
             
+            if let errorMessage = viewModel.errorMessage {
+                Text(errorMessage)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .foregroundColor(.red)
+            }
+            
+            //  Button Views
             HStack {
                 Spacer()
                 
@@ -26,6 +34,7 @@ struct HomeView: View {
                     HStack {
                         Image(systemName: "cloud.fill")
                         Text("Get Weather")
+                            .fontWeight(.bold)
                     }
                 }
                 .padding()
@@ -45,8 +54,9 @@ struct HomeView: View {
                         .cornerRadius(10)
                 }
             }
-            .padding(.horizontal)
-            
+            .padding()
+          
+            // Weather Data Views
             if let weather = viewModel.weather {
                 VStack {
                     Text("Weather in \(weather.name)")
@@ -71,9 +81,9 @@ struct HomeView: View {
                     }
                 }
                 .padding()
-            } else if let errorMessage = viewModel.errorMessage {
-                Text(errorMessage)
-                    .foregroundColor(.red)
+                .background(Color(.systemBackground))
+                .cornerRadius(20)
+                
             }
 
             Spacer()
@@ -87,4 +97,8 @@ struct HomeView: View {
             }
         }
     }
+}
+
+#Preview {
+    HomeView()
 }
